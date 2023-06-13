@@ -1,2 +1,2 @@
 # go-spanner-backup
-go code to create spanner backup. the code can be used for cloud function
+go code to create spanner backup. The container image from the code can be used for cloud run
