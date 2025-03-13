@@ -1,4 +1,4 @@
-FROM golang:1.21.3-alpine3.18@sha256:926f7f7e1ab8509b4e91d5ec6d5916ebb45155b0c8920291ba9f361d65385806 as builder
+FROM golang:1.24.1-alpine@sha256:43c094ad24b6ac0546c62193baeb3e6e49ce14d3250845d166c77c25f64b0386 as builder
 
 # Create and change to the app directory.
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY . ./
 # Build the binary.
 RUN go build -v -o spannerbackup
 
-FROM alpine:3.18@sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978
+FROM alpine:3.21.3@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c
 # RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 #     ca-certificates && \
 #     rm -rf /var/lib/apt/lists/*
@@ -24,7 +24,7 @@ FROM alpine:3.18@sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293
 COPY --from=builder /app/spannerbackup /spannerbackup
 
 # Entrypoint
-Entrypoint ["/spannerbackup"]
+ENTRYPOINT ["/spannerbackup"]
 
 # Run the web service by default on container startup.
 CMD ["service"]
