@@ -1,6 +1,37 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>retailnext/renovate-config"
+    "config:best-practices",
+    ":automergeAll",
+    ":enablePreCommit",
+    ":gitSignOff",
+    ":maintainLockFilesWeekly",
+    ":semanticCommits",
+    "customManagers:dockerfileVersions",
+    "customManagers:githubActionsVersions"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "groupName": "golang",
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "rangeStrategy": "bump"
+    },
+    {
+      "groupName": "golang",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "golang"
+      ]
+    }
+  ],
+  "postUpdateOptions": [
+    "gomodTidy",
+    "gomodUpdateImportPaths"
   ]
 }
