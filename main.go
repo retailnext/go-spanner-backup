@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -68,9 +68,9 @@ func BackupSpanner(w http.ResponseWriter, r *http.Request) {
 	var m PubSubMessage
 	log.Printf("Going to sleep")
 	time.Sleep(30 * time.Second)
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Printf("ioutil.ReadAll: %v", err)
+		log.Printf("io.ReadAll: %v", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
