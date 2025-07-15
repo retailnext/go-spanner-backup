@@ -1,8 +1,6 @@
 module github.com/retailnext/spanner-backup
 
-go 1.23.0
-
-toolchain go1.24.1
+go 1.24.5
 
 require (
 	cloud.google.com/go/spanner v1.50.0
@@ -24,7 +22,7 @@ require (
 	cloud.google.com/go/iam v1.1.0 // indirect
 	cloud.google.com/go/longrunning v0.5.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.4 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
