@@ -4,7 +4,7 @@ go 1.24.5
 
 require (
 	cloud.google.com/go/spanner v1.50.0
-	github.com/golang/protobuf v1.5.3
+	github.com/golang/protobuf v1.5.4
 )
 
 require (
