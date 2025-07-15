@@ -59,7 +59,9 @@ func CreateBackup(ctx context.Context, params BackupParameters, versionTime time
 	if err != nil {
 		return fmt.Errorf("createBackup.NewDatabaseAdminClient: %w", err)
 	}
-	defer adminClient.Close()
+	defer func(adminClient *database.DatabaseAdminClient) {
+		_ = adminClient.Close()
+	}(adminClient)
 
 	expireTime := time.Now().AddDate(0, 0, params.Expire)
 	// Create a backup.
