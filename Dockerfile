@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.19.0-labs@sha256:dce1c693ef318bca08c964ba3122ae6248e45a1b96d65c4563c8dc6fe80349a2
 
-FROM golang:1.25.3@sha256:7d73c4c57127279b23f3f70cbb368bf0fe08f7ab32af5daf5764173d25e78b74 AS build
+FROM golang:1.25.3@sha256:2e3aca25948111e2a3e4acd66b5c5abebecdea6a434eead036152631e4d0b3a0 AS build
 
 WORKDIR /go/src
 
