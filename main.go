@@ -52,12 +52,15 @@ type PubSubMessage struct {
 	Subscription string                      `json:"subscription"`
 }
 
-// sanitizeLog removes newlines and control characters from a string to
+// sanitizeLog removes control characters from a string to
 // prevent log injection attacks.
 func sanitizeLog(s string) string {
-	s = strings.ReplaceAll(s, "\n", "")
-	s = strings.ReplaceAll(s, "\r", "")
-	return s
+	return strings.Map(func(r rune) rune {
+		if (r >= 0 && r < 32) || r == 127 {
+			return -1
+		}
+		return r
+	}, s)
 }
 
 func ServiceMain(cCtx *cli.Context) error {
@@ -67,7 +70,7 @@ func ServiceMain(cCtx *cli.Context) error {
 	// Start HTTP server.
 	log.Printf("Listening on port %s", sanitizeLog(port))
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
+		log.Fatalf("ListenAndServe: %s", sanitizeLog(err.Error()))
 	}
 	return nil
 }
