@@ -15,10 +15,9 @@ import (
 )
 
 func main() {
-	app := &cli.App{
-		Name:     "spanner-backup",
-		HelpName: "spanner-backup",
-		Usage:    "Backup spanner",
+	app := &cli.Command{
+		Name:  "spanner-backup",
+		Usage: "Backup spanner",
 		Commands: []*cli.Command{
 			{
 				Name:  "service",
@@ -41,7 +40,7 @@ func main() {
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
+	if err := app.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -51,10 +50,10 @@ type PubSubMessage struct {
 	Subscription string                      `json:"subscription"`
 }
 
-func ServiceMain(cCtx *cli.Context) error {
+func ServiceMain(ctx context.Context, cmd *cli.Command) error {
 	http.HandleFunc("/", BackupSpanner)
 	// Determine port for HTTP service.
-	port := cCtx.String("port")
+	port := cmd.String("port")
 	// Start HTTP server.
 	log.Printf("Listening on port %s", port)
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
@@ -88,11 +87,11 @@ func BackupSpanner(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func JobMain(cCtx *cli.Context) error {
+func JobMain(ctx context.Context, cmd *cli.Command) error {
 	params := spannerbackup.BackupParameters{
-		BackupID: cCtx.String("backupId"),
-		Database: cCtx.String("databaseId"),
-		Expire:   cCtx.Int("expire"),
+		BackupID: cmd.String("backupId"),
+		Database: cmd.String("databaseId"),
+		Expire:   cmd.Int("expire"),
 	}
 	messageData, err := json.Marshal(params)
 	if err != nil {
@@ -102,5 +101,5 @@ func JobMain(cCtx *cli.Context) error {
 		Data: messageData,
 	}
 
-	return spannerbackup.CreateBackupByPubSub(cCtx.Context, psMessage)
+	return spannerbackup.CreateBackupByPubSub(ctx, psMessage)
 }
