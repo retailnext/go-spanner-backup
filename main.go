@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/urfave/cli/v3"
@@ -50,14 +51,25 @@ type PubSubMessage struct {
 	Subscription string                      `json:"subscription"`
 }
 
+// sanitizeLog removes control characters from a string to
+// prevent log injection attacks.
+func sanitizeLog(s string) string {
+	return strings.Map(func(r rune) rune {
+		if (r >= 0 && r < 32) || r == 127 {
+			return -1
+		}
+		return r
+	}, s)
+}
+
 func ServiceMain(ctx context.Context, cmd *cli.Command) error {
 	http.HandleFunc("/", BackupSpanner)
 	// Determine port for HTTP service.
 	port := cmd.String("port")
 	// Start HTTP server.
-	log.Printf("Listening on port %s", port)
+	log.Printf("Listening on port %s", sanitizeLog(port))
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
+		log.Fatalf("ListenAndServe: %s", sanitizeLog(err.Error()))
 	}
 	return nil
 }
@@ -75,13 +87,13 @@ func BackupSpanner(w http.ResponseWriter, r *http.Request) {
 	}
 	// byte slice unmarshalling handles base64 decoding.
 	if err := json.Unmarshal(body, &m); err != nil {
-		log.Printf("json.Unmarshal: %v", err)
+		log.Printf("json.Unmarshal: %s", sanitizeLog(err.Error()))
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
 	if err = spannerbackup.CreateBackupByPubSub(context.Background(), m.Message); err != nil {
-		log.Printf("Spanner backup failed: %v", err)
+		log.Printf("Spanner backup failed: %s", sanitizeLog(err.Error()))
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
