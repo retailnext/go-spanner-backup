@@ -5,7 +5,7 @@ go 1.27.1
 require (
 	cloud.google.com/go/spanner v1.95.1
 	github.com/golang/protobuf v1.5.4
-	github.com/urfave/cli/v3 v3.11.0
+	github.com/urfave/cli/v3 v3.12.0
 )
 
 require (
