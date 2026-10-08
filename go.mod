@@ -3,7 +3,7 @@ module github.com/retailnext/spanner-backup
 go 1.27.1
 
 require (
-	cloud.google.com/go/spanner v1.96.0
+	cloud.google.com/go/spanner v1.96.1
 	github.com/golang/protobuf v1.5.4
 	github.com/urfave/cli/v3 v3.14.0
 )
