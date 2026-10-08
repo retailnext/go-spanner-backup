@@ -1,6 +1,6 @@
 module github.com/retailnext/spanner-backup
 
-go 1.27.1
+go 1.27.2
 
 require (
 	cloud.google.com/go/spanner v1.96.1
